@@ -102,24 +102,39 @@ def save_new_bucket():
     add_bucket_button_frame.grid_forget()
     home_frame.grid()  
 
-
 #display buckets
-def display_buckets():
+def display_buckets(frame):
     cursor.execute("SELECT name, balance FROM mode_of_payments")
     buckets = cursor.fetchall()
 
     for index, (name, balance) in enumerate(buckets):
-        bucket_label = Label(home_frame, text = f"{name}: {balance}")
+        bucket_label = Label(frame, text = f"{name}: {balance}")
         bucket_label.grid(row = index + 2, column = 0)
 
-display_buckets()
+display_buckets(home_frame)
 
 def edit_bucket_command():
     home_frame.grid_forget()
     edit_buckets_frame.grid()
 
-    display_buckets()
-    return
+    cursor.execute("SELECT name, balance FROM mode_of_payments")
+    buckets = cursor.fetchall()
+
+    bucket_list_frame = Frame(edit_buckets_frame)
+    bucket_list_frame.grid(row = 0, column = 0)
+
+    for index, (name, balance) in enumerate(buckets):
+        bucket_label_entry = Entry(edit_buckets_frame)
+        bucket_label_entry.grid(row = index, column = 0)
+        bucket_label_entry.insert(0, name)
+
+        balance_label_entry = Entry(edit_buckets_frame)
+        balance_label_entry.grid(row = index, column = 1)
+        balance_label_entry.insert(0, balance)
+    
+    save_edit_bucket_button = Button(edit_buckets_frame, text = "save")
+    save_edit_bucket_button.grid(row = 5)
+
 
 def back_button_function(current_frame, destination_frame):
     current_frame.grid_forget()
