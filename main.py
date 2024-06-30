@@ -7,13 +7,6 @@ window = Tk()
 home_frame = Frame(window)
 home_frame.grid()
 
-expense_list_frame = Frame(home_frame)
-expense_list_frame.grid(row = 0,column=0)
-
-add_expense_frame = Frame()
-
-buttons_frame = Frame(home_frame)
-
 #database setup
 conn = sqlite3.connect("expenses.db")
 cursor = conn.cursor()
@@ -42,7 +35,6 @@ def get_total_balance():
         return result[0]
     else:
         return 0
-    
 
 # displays total balance 
 total_balance = get_total_balance()
@@ -82,11 +74,6 @@ def add_bucket_button_command():
     save_button = Button(add_bucket_button_frame, text = "Save", command=save_new_bucket)
     save_button.grid(row = 3, column = 0)
 
-#edit bucket
-edit_bucket_button = Button(home_frame, text = "Edit buckets")
-edit_bucket_button.grid(row = )
-
-def edit_bucket_command():
 
 #save new bucket added by the user
 def save_new_bucket():
@@ -115,10 +102,6 @@ def save_new_bucket():
     add_bucket_button_frame.grid_forget()
     home_frame.grid()  
 
-add_bucket_button = Button(home_frame, text = "Add New Bucket", command = add_bucket_button_command)
-add_bucket_button.grid(row = 5, column = 3)
-
-add_bucket_button_frame =  Frame(window)
 
 #display buckets
 def display_buckets():
@@ -130,6 +113,13 @@ def display_buckets():
         bucket_label.grid(row = index + 2, column = 0)
 
 display_buckets()
+
+def edit_bucket_command():
+    home_frame.grid_forget()
+    edit_buckets_frame.grid()
+
+    display_buckets()
+    return
 
 def back_button_function(current_frame, destination_frame):
     current_frame.grid_forget()
@@ -246,7 +236,21 @@ def display_transactions():
 
 display_transactions()
 
-add_expense_button = Button(home_frame, text = "Add", command= add_expense_command)
-add_expense_button.grid(column = 1)
+buttons_frame = Frame(home_frame)
+buttons_frame.grid(row = 0, column = 2, rowspan=5)
+
+add_expense_button = Button(buttons_frame, text = "Add", command= add_expense_command)
+add_expense_button.grid(row = 2, column = 0)
+
+add_bucket_button = Button(buttons_frame, text = "Add New Bucket", command = add_bucket_button_command)
+add_bucket_button.grid(row = 0, column = 0)
+
+edit_bucket_button = Button(buttons_frame, text = "Edit buckets", command=edit_bucket_command)
+edit_bucket_button.grid(row = 1, column=0)
+
+add_bucket_button_frame =  Frame(window)
+
+add_expense_frame = Frame()
+edit_buckets_frame = Frame()
 
 window.mainloop()
