@@ -113,28 +113,44 @@ def display_buckets(frame):
 
 display_buckets(home_frame)
 
+def save_edit_command(names, balances):
+    
+    for index in range(names):
+        updated_name = names[index].get()
+        updated_balance = balances[index].get()
+
+
 def edit_bucket_command():
     home_frame.grid_forget()
     edit_buckets_frame.grid()
 
-    cursor.execute("SELECT name, balance FROM mode_of_payments")
+    cursor.execute("SELECT name, balance, id FROM mode_of_payments")
     buckets = cursor.fetchall()
 
     bucket_list_frame = Frame(edit_buckets_frame)
     bucket_list_frame.grid(row = 0, column = 0)
 
-    for index, (name, balance) in enumerate(buckets):
+    buckets_data = []
+
+    for bucket in buckets:
+        bucket_id, bucket_name, bucket_balance = bucket
+        buckets_data.append([bucket_id, bucket_name, bucket_balance])
+
+    for index, bucket_data in enumerate(buckets_data):
+        bucket_id, bucket_name, bucket_balance = bucket
+        
         bucket_label_entry = Entry(edit_buckets_frame)
         bucket_label_entry.grid(row = index, column = 0)
         bucket_label_entry.insert(0, name)
+        updated_bucket_names.append(bucket_label_entry)
 
         balance_label_entry = Entry(edit_buckets_frame)
         balance_label_entry.grid(row = index, column = 1)
         balance_label_entry.insert(0, balance)
+        updated_balances.append(balance_label_entry)
     
-    save_edit_bucket_button = Button(edit_buckets_frame, text = "save")
+    save_edit_bucket_button = Button(edit_buckets_frame, text = "save", command= lambda: save_edit_command(updated_bucket_names, updated_balances))
     save_edit_bucket_button.grid(row = 5)
-
 
 def back_button_function(current_frame, destination_frame):
     current_frame.grid_forget()
